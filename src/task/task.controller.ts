@@ -1,31 +1,46 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { TaskDto } from './task.dto';
 
-@Controller('tasks')
+@Controller('/tasks')
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
-  @Get()
+  @Get('')
+  @HttpCode(200)
   async getAllTasks(){
-    return await this.taskService.getAll()
+    try {
+      const tasks = await this.taskService.getAll() 
+      return {result:{
+          status: 'success',
+          code: 200,
+          tasks: tasks
+      }}
+      
+    } catch (error) {
+      console.log(error)
+    }
+
+
   }
 
-  @Post()
+
+
+  @Post('')
   @UsePipes(new ValidationPipe())
   async createTask(@Body() dto: TaskDto){
     return await this.taskService.create(dto)
   }
 
-  @Put(':id')
+  @Put('/:id')
   @UsePipes(new ValidationPipe())
-  async updateStatus(@Param('id') id: number, @Body() newStatus: string){
+  async updateStatus(@Param('id') id: string, @Body() newStatus: string){
       return await this.taskService.update(id, newStatus)
   }
 
-  @Delete(':id')
+  @Delete('/:id')
   @UsePipes(new ValidationPipe())
-  async deleteTask(@Param('id') id: number){
+  async deleteTask(@Param('id') id: string){
     return await this.taskService.delete(id)
   }
 }

@@ -8,10 +8,11 @@ datasource db {
 }
 
 model todo_list {
-  id          Int     @id @default(autoincrement())
-  title       String
+  id        String   @id  // UUID or TEXT primary key
+  title     String
   description String?
-  status      String
-
+  status    String
   @@map("todo-list")
 }
+
+

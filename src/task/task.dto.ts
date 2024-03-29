@@ -4,19 +4,16 @@ import { IsInt, IsString } from "class-validator";
 export class TaskDto {
 
     @IsString()
-    title: string
-
-
-    @IsInt()
-    id: number
+    id: string;
 
     @IsString()
-    status: string
-    
-    
-    @IsString()
-    description?: string
+    title: string;
 
+    @IsString()
+    description: string;
+
+    @IsString()
+    status: string;
 
 
 }

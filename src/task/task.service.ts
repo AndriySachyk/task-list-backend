@@ -9,10 +9,10 @@ export class TaskService {
     constructor (private prisma: PrismaService ) {}
 
 
-    async getById(id: number){
+    async getById(id: string){
         const task  = this.prisma.todo_list.findUnique({
             where: {
-                id: +id,
+                id: id.toString(),
             },
         })
     
@@ -39,7 +39,7 @@ export class TaskService {
 
 
 // Оновлює статус task 
-    async update(id:number, newStatus: string){
+    async update(id:string, newStatus: string){
         const task = await this.getById(id)
         
         const updateStatus = newStatus["status"]
@@ -58,7 +58,7 @@ export class TaskService {
         return task
     }
 
-    async delete(id: number){
+    async delete(id: string){
         const task = await this.getById(id)
 
         const taskDelete = await this.prisma.todo_list.delete({
