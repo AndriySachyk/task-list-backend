@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put,  UsePipes, ValidationPipe } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { TaskDto } from './task.dto';
 
@@ -15,15 +15,41 @@ export class TaskController {
           status: 'success',
           code: 200,
           tasks: tasks
-      }}
-      
+      }} 
     } catch (error) {
       console.log(error)
     }
-
-
   }
 
+  @Get('/:id')
+  @HttpCode(HttpStatus.OK)
+  async getOneTask(@Param('id') id:string){
+    try {
+      const task = await this.taskService.getOne(id) 
+      return {result:{
+          status: 'success',
+          code: 200,
+          tasks: task
+      }} 
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  @Get('status/:status')
+  @HttpCode(HttpStatus.OK)
+  async getStatusTask(@Param('status') status: string ) {
+    try {
+      const tasks = await this.taskService.filterTask(status) 
+      return {result:{
+          status: 'success',
+          code: 200,
+          tasks: tasks
+      }} 
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
 
   @Post('')
@@ -34,8 +60,17 @@ export class TaskController {
 
   @Put('/:id')
   @UsePipes(new ValidationPipe())
-  async updateStatus(@Param('id') id: string, @Body() newStatus: string){
-      return await this.taskService.update(id, newStatus)
+  async updateStatus(@Param('id') id: string, @Body() newTask: TaskDto){
+    try {
+      const updateTask = await this.taskService.update(id,newTask) 
+      return {result:{
+          status: 'success',
+          code: 200,
+          data: updateTask
+      }} 
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   @Delete('/:id')
